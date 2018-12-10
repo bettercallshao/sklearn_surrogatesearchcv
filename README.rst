@@ -1,7 +1,7 @@
 Surrogate Search CV
 ==========================
 
-This package implements a randomized hyper parameter search for sklearn (similar to RandomizedSearchCV) but utilizes surrogate adaptive sampling from pySOT. Use this similarly to RandomizedSearchCV with a few extra paramters.
+This package implements a randomized hyper parameter search for sklearn (similar to RandomizedSearchCV) but utilizes surrogate adaptive sampling from pySOT. Use this similarly to GridSearchCV with a few extra paramters.
 
 Credits
 -------
