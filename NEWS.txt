@@ -1,0 +1,12 @@
+.. Release note
+
+News
+====
+
+0.1
+---
+
+*Release date: 15-Dec-2018*
+
+* First release with minimal features
+
