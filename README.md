@@ -4,6 +4,10 @@ This package implements a randomized hyper parameter search for sklearn (similar
 
 ## Usage
 
+```
+pip install sklearn-surrogatesearchcv
+```
+
 The interface is unimaginative, stylistically similar to `RandomizedSearchCV`.
 
 ```
