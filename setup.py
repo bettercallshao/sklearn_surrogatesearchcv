@@ -16,6 +16,7 @@ setup(
     description="Surrogate adaptive randomized search for hyper parameters"
                 "in sklearn.",
     long_description=long_description,
+    long_description_content_type='text/markdown',
     classifiers=[],
     keywords='',
     author='Shaoqing Tan',
