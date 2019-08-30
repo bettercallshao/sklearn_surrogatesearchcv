@@ -1,10 +1,13 @@
-from setuptools import find_packages, setup
+# -*- coding: utf-8 -*-
+"""Setup for sklearn_surrogatesearchcv."""
 
-version = '0.1'
+from setuptools import setup, find_packages
+
+version = '0.1.1'
 
 install_requires = [
     'sklearn',
-    'pySOT'
+    'pySOT',
 ]
 
 with open('README.md') as f:
@@ -13,8 +16,8 @@ with open('README.md') as f:
 setup(
     name='sklearn_surrogatesearchcv',
     version=version,
-    description="Surrogate adaptive randomized search for hyper parameters"
-                "in sklearn.",
+    description='Surrogate adaptive randomized search for hyper parameters'
+                'in sklearn.',
     long_description=long_description,
     long_description_content_type='text/markdown',
     classifiers=[],

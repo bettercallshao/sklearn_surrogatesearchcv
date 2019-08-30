@@ -1,1 +1,1 @@
-from .surrogatesearchcv import SurrogateSearchCV # noqa
+from .surrogatesearchcv import SurrogateSearchCV  # noqa

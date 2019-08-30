@@ -1,4 +1,6 @@
 # Surrogate Search CV
+[![CircleCI](https://circleci.com/gh/timlyrics/sklearn_surrogatesearchcv.svg?style=shield)](https://circleci.com/gh/timlyrics/sklearn_surrogatesearchcv)
+[![PyPi](https://badge.fury.io/py/sklearn_surrogatesearchcv.svg)](https://badge.fury.io/py/sklearn_surrogatesearchcv)
 
 This package implements a randomized hyper parameter search for sklearn (similar to `RandomizedSearchCV`) but utilizes surrogate adaptive sampling from pySOT. Use this similarly to GridSearchCV with a few extra paramters.
 
@@ -49,10 +51,6 @@ best_score_
 ```
 
 For a complete example, please refer to `src/test/test_basic.py`.
-
-## CI
-
-[![CircleCI](https://circleci.com/gh/timlyrics/sklearn_surrogatesearchcv.svg?style=svg)](https://circleci.com/gh/timlyrics/sklearn_surrogatesearchcv)
 
 ## Resources
 

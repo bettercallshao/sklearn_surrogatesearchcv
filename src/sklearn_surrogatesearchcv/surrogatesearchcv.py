@@ -1,23 +1,24 @@
+# -*- coding: utf-8 -*-
+"""Surrogate search with cross validation for hyper parameter tuning."""
+
 from __future__ import print_function
 
 import numpy as np
-from sklearn.model_selection import GridSearchCV
-
+from pySOT.strategy import SRBFStrategy
 from poap.controller import SerialController
+from pySOT.surrogate import LinearTail, CubicKernel, RBFInterpolant, SurrogateUnitBox
+from sklearn.model_selection import GridSearchCV
 from pySOT.experimental_design import SymmetricLatinHypercube
 from pySOT.optimization_problems import OptimizationProblem
-from pySOT.strategy import SRBFStrategy
-from pySOT.surrogate import (CubicKernel, LinearTail, RBFInterpolant,
-                             SurrogateUnitBox)
 
 
 class SurrogateSearchCV(object):
-    """Surrogate search with cross validation for hyper parameter tuning.
-    """
+    """Surrogate search with cross validation for hyper parameter tuning."""
 
     def __init__(self, estimator, n_iter=10, param_def=None, refit=False,
                  **kwargs):
-        """
+        """Surrogate search with cross validation for hyper parameter tuning.
+
         :param estimator: estimator
         :param n_iter: number of iterations to run (default 10)
         :param param_def: list of dictionaries, e.g.
@@ -46,19 +47,19 @@ class SurrogateSearchCV(object):
         if refit:
             raise ValueError('Refit not supported')
 
-        for d in param_def:
-            if 'name' not in d:
+        for param in param_def:
+            if 'name' not in param:
                 raise ValueError('Name must be defined for each parameter')
 
-            if 'integer' not in d:
-                d['integer'] = False
+            if 'integer' not in param:
+                param['integer'] = False
 
-            if 'lb' not in d or 'ub' not in d:
+            if 'lb' not in param or 'ub' not in param:
                 raise ValueError(
-                    'Fields lb and ub must be defined for {name}'.format(**d))
-            if d['ub'] <= d['lb']:
+                    'Fields lb and ub must be defined for {name}'.format(**param))
+            if param['ub'] <= param['lb']:
                 raise ValueError(
-                    'Field ub must be larger than lb for {name}'.format(**d))
+                    'Field ub must be larger than lb for {name}'.format(**param))
 
         self.param_def = param_def
         self.kwargs = kwargs
@@ -68,7 +69,7 @@ class SurrogateSearchCV(object):
         self.score_history_ = []
 
     def fit(self, X, y=None, **kwargs):
-        """
+        """Run training with cross validation.
 
         :param X: training data
         :param **: parameters to be passed to GridSearchCV
@@ -78,23 +79,23 @@ class SurrogateSearchCV(object):
             def __init__(self, outer):
                 self.outer = outer
                 param_def = outer.param_def
-                self.lb = np.array(list(d['lb'] for d in param_def))
-                self.ub = np.array(list(d['ub'] for d in param_def))
+                self.lb = np.array([param['lb'] for param in param_def])
+                self.ub = np.array([param['ub'] for param in param_def])
                 self.dim = len(param_def)
-                self.int_var = np.array(list(
-                    i for i, d in enumerate(param_def) if d['integer']))
-                self.cont_var = np.array(list(
-                    i for i, d in enumerate(param_def)
-                    if i not in self.int_var))
+                self.int_var = np.array([
+                    idx for idx, param in enumerate(param_def) if param['integer']])
+                self.cont_var = np.array([
+                    idx for idx, param in enumerate(param_def)
+                    if idx not in self.int_var])
 
-            def eval(self, x):
-                print('Eval {} ...'.format(x))
+            def eval_(self, x):
+                print('Eval {0} ...'.format(x))
                 param_def = self.outer.param_def
                 outer = self.outer
                 # prepare parameters grid for gridsearchcv
                 param_grid = (
-                    {d['name']: [int(x[i]) if d['integer'] else x[i]]
-                        for i, d in enumerate(param_def)})
+                    {param['name']: [int(x[idx]) if param['integer'] else x[idx]]
+                        for idx, param in enumerate(param_def)})
                 # create gridsearchcv to evaluate the cv
                 gs = GridSearchCV(outer.estimator, param_grid, refit=False,
                                   **outer.kwargs)
@@ -108,7 +109,7 @@ class SurrogateSearchCV(object):
                 # also record history
                 outer.params_history_.append(x)
                 outer.score_history_.append(gs_score)
-                print('Eval {} => {}'.format(x, gs_score))
+                print('Eval {0} => {1}'.format(x, gs_score))
                 # pySOT score is the lower the better, so return the negated
                 return -gs_score
 
@@ -123,15 +124,15 @@ class SurrogateSearchCV(object):
                                        num_pts=2 * (target.dim + 1))
 
         # Create a strategy and a controller
-        controller = SerialController(objective=target.eval)
+        controller = SerialController(objective=target.eval_)
         controller.strategy = SRBFStrategy(
             max_evals=self.n_iter, batch_size=1, opt_prob=target,
             exp_design=slhd, surrogate=rbf, asynchronous=False)
 
-        print("Maximum number of evaluations: {}".format(self.n_iter))
-        print("Strategy: {}".format(controller.strategy.__class__.__name__))
-        print("Experimental design: {}".format(slhd.__class__.__name__))
-        print("Surrogate: {}".format(rbf.__class__.__name__))
+        print('Maximum number of evaluations: {0}'.format(self.n_iter))
+        print('Strategy: {0}'.format(controller.strategy.__class__.__name__))
+        print('Experimental design: {0}'.format(slhd.__class__.__name__))
+        print('Surrogate: {0}'.format(rbf.__class__.__name__))
 
         # Run the optimization strategy
         result = controller.run()
