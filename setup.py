@@ -24,7 +24,7 @@ setup(
     keywords='',
     author='Shaoqing Tan',
     author_email='tansq7@gmail.com',
-    url='https://github.com/timlyrics/sklearn_surrogatesearchcv',
+    url='https://github.com/bettercallshao/sklearn_surrogatesearchcv',
     license='MIT',
     packages=find_packages('src'),
     package_dir={'': 'src'},
